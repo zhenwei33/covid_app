@@ -5,52 +5,46 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [blue3, blue2], end: Alignment.bottomRight)),
+      height: 70,
       padding: EdgeInsets.zero,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            height: 70,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [blue3, blue2], end: Alignment.bottomRight)),
-            child: Stack(
-              children: [
-                ClipPath(
-                  clipper: MyClipper2(),
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    color: Colors.white.withOpacity(.8),
-                    height: double.infinity,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-                ClipPath(
-                  clipper: MyClipper(),
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    color: Colors.white,
-                    height: double.infinity,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ],
+          ClipPath(
+            clipper: MyClipper2(),
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              color: Colors.white.withOpacity(.8),
+              height: double.infinity,
+              width: MediaQuery.of(context).size.width,
+            ),
+          ),
+          ClipPath(
+            clipper: MyClipper(),
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              color: Colors.white,
+              height: double.infinity,
+              width: MediaQuery.of(context).size.width,
             ),
           ),
           Container(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             width: MediaQuery.of(context).size.width,
-            height: 30,
-            child: Text("Source from covid-19.livephotos123.com, KwongWah.com.my",
-            style: TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: 14,
-              color: Colors.white
+            height: 20,
+            child: Text(
+              "Source from covid-19.livephotos123.com, KwongWah.com.my",
+              style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 14,
+                  color: Colors.white),
             ),
-            ),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [blue3, blue2], end: Alignment.bottomRight)),
+            // decoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //         colors: [blue3, blue2], end: Alignment.bottomRight)),
           ),
         ],
       ),

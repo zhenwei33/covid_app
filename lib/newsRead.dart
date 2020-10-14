@@ -136,18 +136,6 @@ class _NewsReadState extends State<NewsRead> {
                             ],
                           ),
                         )),
-                    // Center(
-                    //   child: Container(
-                    //     width: 200,
-                    //     height: 70,
-                    //     color: Colors.amber,
-                    //     child: InkWell(
-                    //         child: Text("Back"),
-                    //         onTap: () {
-                    //           Navigator.of(context).pop();
-                    //         }),
-                    //   ),
-                    // ),
                   ],
                 ));
           } else {

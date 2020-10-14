@@ -5,16 +5,18 @@ import 'package:simple_animations/simple_animations.dart';
 class FadeIn extends StatelessWidget {
   final double delay;
   final Widget child;
+  final String direction; //translateX translateY
+  final double offset; //130.0
 
-  FadeIn(this.delay, this.child);
+  FadeIn(this.delay, this.direction, this.offset, this.child);
 
   @override
   Widget build(BuildContext context) {
     final tween = MultiTrackTween([
       Track("opacity")
           .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
-      Track("translateX").add(
-          Duration(milliseconds: 500), Tween(begin: 130.0, end: 0.0),
+      Track(direction).add(
+          Duration(milliseconds: 500), Tween(begin: offset, end: 0.0),
           curve: Curves.easeOut)
     ]);
 
@@ -25,8 +27,11 @@ class FadeIn extends StatelessWidget {
       child: child,
       builderWithChild: (context, child, animation) => Opacity(
             opacity: animation["opacity"],
-            child: Transform.translate(
-                offset: Offset(animation["translateX"], 0), child: child),
+            child: direction == "translateX" ?
+            Transform.translate(
+                offset: Offset(animation[direction], 0), child: child) :
+            Transform.translate(
+                offset: Offset(0, animation[direction]), child: child),
           ),
     );
   }

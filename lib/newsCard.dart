@@ -1,3 +1,4 @@
+import 'package:covid_app/fadeInUI.dart';
 import 'package:covid_app/global.dart';
 import 'package:covid_app/object/news.dart';
 import 'package:covid_app/newsRead.dart';
@@ -5,11 +6,12 @@ import 'package:flutter/material.dart';
 
 class NewsCard extends StatelessWidget {
   final News news;
-  NewsCard({this.news});
+  final double fadeDelay;
+  NewsCard({this.news, this.fadeDelay});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return FadeIn(fadeDelay, "translateX", 100, Container(
         padding: EdgeInsets.only(top: 10),
         height: 70,
         // color: Colors.green,
@@ -64,6 +66,6 @@ class NewsCard extends StatelessWidget {
                   .push(MaterialPageRoute(builder: (context) => NewsRead(news: this.news)));
             },
           ),
-        ));
+        )));
   }
 }

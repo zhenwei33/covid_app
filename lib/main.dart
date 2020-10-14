@@ -1,3 +1,4 @@
+import 'package:covid_app/fadeInUI.dart';
 import 'package:covid_app/newsFeed.dart';
 import 'package:covid_app/object/news.dart';
 import 'package:covid_app/selectState.dart';
@@ -18,11 +19,12 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   final Future _initializeData = Init.initialize();
+  
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -34,19 +36,28 @@ class MyApp extends StatelessWidget {
         home: FutureBuilder(
           future: _initializeData,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return
+            Widget splashScreen;
+            if (snapshot.connectionState == ConnectionState.waiting) {
                   // Container(
                   //   child: Text('${snapshot.data}'),
                   // );
-                  MyHomePage(
-                title: 'Flutter Demo Home Page',
-                states: snapshot.data[0],
-                news: snapshot.data[1],
-              );
+                // splashScreen = Container(
+                //   key: UniqueKey(),
+                //   width: MediaQuery.of(context).size.width,
+                //   height: MediaQuery.of(context).size.height,
+                //   color: cyan2,
+                // );
+                splashScreen = SplashScreen();
+                
             } else {
-              return SplashScreen();
+              splashScreen = MyHomePage(
+                  title: 'Flutter Demo Home Page',
+                  states: snapshot.data[0],
+                  news: snapshot.data[1],
+                );
             }
+            return AnimatedSwitcher(
+                  duration: Duration(seconds: 2), child: splashScreen);
           },
         ));
   }
@@ -115,19 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState() {
     super.initState();
-    // const MethodChannel('plugins.flutter.io/shared_preferences')
-    //     .setMockMethodCallHandler((call) async {
-    //   if (call.method == 'getAll') {
-    //     return {"flutter.PrefsState": "0"};
-    //   }
-    //   return null;
-    // });
-    // setPrefsState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: ValueKey(1),
       backgroundColor: Colors.white,
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -141,43 +145,49 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.bottomCenter,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  height: 250,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [blue3, blue2], end: Alignment.bottomRight)),
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 250.0,
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 6),
-                      autoPlayAnimationDuration: Duration(milliseconds: 1400),
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      pauseAutoPlayOnTouch: true,
-                      aspectRatio: 2.0,
-                      viewportFraction: 1,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                    ),
-                    items: cardList.map((card) {
-                      return Builder(builder: (BuildContext context) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height * 0.30,
-                          width: MediaQuery.of(context).size.width,
-                          child: Card(
-                            color: Colors.transparent,
-                            elevation: 0,
-                            child: card,
-                          ),
-                        );
-                      });
-                    }).toList(),
-                  ),
-                ),
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    height: 250,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [blue3, blue2],
+                            end: Alignment.bottomRight)),
+                    child: FadeIn(
+                      2.0,
+                      "translateY",
+                      50.0,
+                      CarouselSlider(
+                        options: CarouselOptions(
+                          height: 250.0,
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 6),
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 1400),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          pauseAutoPlayOnTouch: true,
+                          aspectRatio: 2.0,
+                          viewportFraction: 1,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          },
+                        ),
+                        items: cardList.map((card) {
+                          return Builder(builder: (BuildContext context) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.30,
+                              width: MediaQuery.of(context).size.width,
+                              child: Card(
+                                color: Colors.transparent,
+                                elevation: 0,
+                                child: card,
+                              ),
+                            );
+                          });
+                        }).toList(),
+                      ),
+                    )),
                 Container(
                   padding: EdgeInsets.only(bottom: 50),
                   child: Row(
@@ -224,75 +234,65 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            SelectState(states: widget.states)));
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.white,
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Container(
-                          height: 60,
-                          width: 150,
-                          child: FittedBox(
-                              fit: BoxFit.fitWidth, child: loadState(0)),
-                        ),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "New Cases",
-                                style: black18,
+            FadeIn(
+                2.3,
+                "translateX",
+                100,
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                SelectState(states: widget.states)));
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.white,
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                              height: 60,
+                              width: 150,
+                              child: FittedBox(
+                                  fit: BoxFit.fitWidth, child: loadState(0)),
+                            ),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "New Cases",
+                                    style: black18,
+                                  ),
+                                  Text(
+                                    "Infected",
+                                    style: black18,
+                                  ),
+                                  Text("Death", style: black18),
+                                ],
                               ),
-                              Text(
-                                "Infected",
-                                style: black18,
+                            ),
+                            FittedBox(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  loadState(1),
+                                  loadState(2),
+                                  loadState(3),
+                                ],
                               ),
-                              Text("Death", style: black18),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                        FittedBox(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              loadState(1),
-                              loadState(2),
-                              loadState(3),
-                              // Text(
-                              //   //"1233",
-                              //   widget.states[prefsState].newCase,
-                              //   style: black18,
-                              // ),
-                              // Text(
-                              //   //"2123",
-                              //   widget.states[prefsState].infected,
-                              //   style: black18,
-                              // ),
-                              // Text(
-                              //     //"321",
-                              //     widget.states[prefsState].death,
-                              //     style: black18),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
+                      ),
+                    ))),
 
             NewsFeed(news: widget.news),
             //NewsFeed(news: testList),
